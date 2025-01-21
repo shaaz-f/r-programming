@@ -1,4 +1,4 @@
-# Question 1, plotting Iris dataset
+## Question 1, plotting Iris dataset
 plot(iris$Petal.Width, iris$Petal.Length, 
      xlab = "Width (cm)", 
      ylab = "Length (cm)",
@@ -8,8 +8,11 @@ plot(iris$Petal.Width, iris$Petal.Length,
 title("Iris Petal Width vs Iris Petal Length")
 legend("topleft", legend=c("Setosa", "Versicolor", "Virginica"), col=c(1,2,3), pch=19)
 
-# Question 2, plotting sin(x)
-par(pty = "s")
+## Question 2, plotting sin(x)
+ 
+par(pty = "s") # Making sure its square
+
+# Plot
 plot(sin,
      from = -pi,
      to = pi,
@@ -21,6 +24,8 @@ plot(sin,
      ylab = "",
      lwd = 2
 )
+
+# Lines for the box
 abline(h = 0,
        v = 0,
        lwd = 0.5)
@@ -52,5 +57,20 @@ axis(side = 4,
      las = 2,
      cex.axis = 0.8)
 
+# Sin text
 text(2.7,0.9,labels="sin(x)")
 
+## Question 5
+
+# A
+data <- iris$Sepal.Length
+density(data, bw="nrd0")
+density(data, bw="nrd")
+
+# B
+
+# Using the formula to calculate bandwidth
+(0.9 * min(sd(data), IQR(data)/1.34))*(length(data)^(-1/5))
+(1.06 * min(sd(data), IQR(data)/1.34))*(length(data)^(-1/5))
+
+## They equal the same as the functions, just a bit more decimals provided.
