@@ -2,7 +2,7 @@
 plot(iris$Petal.Width, iris$Petal.Length, 
      xlab = "Width (cm)", 
      ylab = "Length (cm)",
-     pch = 16,
+     pch = c(Sertosa = 1, Versicolor = 2, Virginica = 12)[iris$Species],
      col = iris$Species)
 
 title("Iris Petal Width vs Iris Petal Length")
