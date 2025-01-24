@@ -1,0 +1,129 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+
+% Remove the footer properly
+%\fancyfoot{} 
+%\pagestyle{fancy} 
+\renewcommand*{\thesubsection}{\alph{subsection}.}
+
+\begin{document}
+\section{Plotting Iris Dataset}
+The code and output for this section is provided below:
+\begin{center}
+<<plot1, fig.pos="t", fig.height=5, fig.width=5,echo=TRUE, cache=FALSE>>=
+plot(iris$Petal.Width, iris$Petal.Length, 
+     xlab = "Width (cm)", 
+     ylab = "Length (cm)",
+     pch = c(Sertosa = 1, Versicolor = 2, Virginica = 12)[iris$Species],
+     col = iris$Species)
+
+title("Iris Petal Width vs Iris Petal Length")
+legend("topleft", 
+legend=c("Setosa", "Versicolor", "Virginica"), col=c(1,2,3), pch=19)
+@
+\end{center}
+\pagebreak
+
+\section{Plot of Sin(x)}
+The code and output for this section is provided below:
+\begin{center}
+<<plot2, fig.pos="t", fig.height=5, fig.width=5,echo=TRUE, cache=FALSE>>=
+par(pty = "s") # Making sure its square
+plot(sin, from = -pi, to = pi, xlim = c(-3.5,3.5), ylim = c(-1.1, 1.1),
+     yaxt = "n", xaxt = "n", bty = "n", xlab = "", ylab = "", lwd = 2)
+
+abline(h = 0, v = 0, lwd = 0.5)
+abline(h = 1, v = pi, lty = 3)
+abline(h = -1, v = -pi, lty = 3)
+
+axis(side = 1, at = seq(-3.5, 3.5, 0.5), pos = 0, lwd = 0.5,
+     lwd.ticks = 0.5, cex.axis = 0.6, line = -0.9)
+axis(side = 1, at = seq(-3.5, 3.5, 0.1), labels = FALSE, pos = 0,
+     lwd = 0.5, lwd.ticks = 0.5, tck = 0.01)
+axis(side = 4, at = c(-1, -0.5, 0.5, 1), pos = 0, lwd = 0.5,
+     lwd.ticks = 0.5, las = 2, cex.axis = 0.8)
+
+text(2.7,0.9,labels="sin(x)")
+text(0,-1.3,labels="x", xpd=TRUE)
+@
+\end{center}
+\pagebreak
+
+\section{CDF of X}
+\subsection{Express CDF of Y as CDF of X}
+
+\begin{flalign*}
+    \text{CDF of Y: } F_Y(y) &= P(Y < y) = P(\sigma X - \mu < y) = P(X < \frac{y + \mu}{\sigma}) & \\
+    F_Y(y) &= F_X(\frac{y + \mu}{\sigma})
+\end{flalign*}
+
+\subsection{Express Quantile of Y as Quantile of X}
+\begin{flalign*}
+Q_Y(p) = F_Y^{-1}(p) \implies F_Y(Q_Y(p)) &= p, &\\
+\therefore F_X\left(\frac{Q_Y(p) + \mu}{\sigma}\right) &= p. &\\
+\frac{Q_Y(p) + \mu}{\sigma} &= F^{-1}_X(p) \text{, since F(x) is invertible}&\\
+Q_Y(p) &= \sigma F^{-1}_X(p) - \mu &\\
+Q_Y(p) &= \sigma Q_X(p) - \mu
+\end{flalign*}
+\pagebreak
+\vspace*{-60pt}%
+\section{Kernel Density Estimator}
+\subsection{Show that it is non-negative}
+b, n $>$ 0 $\therefore \frac{1}{bn} > 0$ \\
+\linebreak
+$K(u) > 0$ for all $u$, by definition:
+\begin{align*}
+K(u) &> 0 \\
+\implies \sum_{i} K(u) &> 0 \\
+\implies \frac{1}{nb} \sum_{i} K(u) &> 0 \\
+\therefore \frac{1}{nb} \sum_{i} K\left(\frac{y_i - x}{b}\right) &> 0\\
+\therefore \hat{f}(x) &> 0
+\end{align*}
+
+\subsection{Show that it integrates to 1}
+\begin{align*}
+    \int \hat{f}(x) &= \int \frac{1}{nb} \sum_{i} K\left(\frac{y_i - x}{b}\right) dx \\
+    &= \frac{1}{nb} \sum_i \int K(u) \, dx\text{, for }u = \frac{y_i-x}{b} \\
+    &= \frac{1}{nb} \sum_i \int K(u)\, b \, du\text{, for }dx = b \, du \\
+    &= \frac{1}{n} \sum_i 1,\text{by definition of K} \\
+    &= \frac{n}{n} = 1
+\end{align*}
+\pagebreak
+
+\section{Silverman's Rule}
+For this question, I decided to use the Iris Dataset in R, but using Sepal Length instead of Petal.
+\subsection{Compute Bandwidth using density() function}
+
+<<echo=TRUE, cache=FALSE>>=
+density(iris[["Sepal.Length"]], bw="nrd0")
+density(iris[["Sepal.Length"]], bw="nrd")
+@
+\subsection{Compute Bandwidth using Formula}
+<<echo=TRUE, cache=FALSE>>=
+data <- iris[["Sepal.Length"]]
+(0.9 * min(sd(data), IQR(data)/1.34))*(length(data)^(-1/5))
+(1.06 * min(sd(data), IQR(data)/1.34))*(length(data)^(-1/5))
+@
+\noindent As seen above, the formula derived in class yields the same bandwidth as the density() functions.
+\pagebreak
+
+\section{Triangle Distribution}
+\includegraphics{Joint Density.png}
+\subsection{Marginal Density of X}
+\includegraphics{X Density.png}
+\subsection{Marginal Density of Y}
+\includegraphics{Y Density.png}
+\pagebreak
+\subsection{First Probability}
+\includegraphics{P1.png} \\
+We want $P[X+Y \le 1]$, which is demonstrated by the shaded region above on the joint density graph. We know that area under density represents probability, and also that probability of a triangle is $\frac{1}{2}\,b\,h$.
+$\therefore P[X+Y\le 1]= A = \frac{1}{2}bh = \left(\frac{1}{2}\right)\left(\frac{1}{2}\right)\left(\frac{1}{2}+\frac{1}{2}\right) = \frac{1}{4}$
+\subsection{Second Probability}
+\includegraphics{P2.png} \\
+We want to know $P[Y > 1/3 | X = 2/3]$. As seen above, when X = 2/3, Y is always > 1/3. \\
+$\therefore P[Y > 1/3 | X = 2/3] = 1$
+\end{document}
