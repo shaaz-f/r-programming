@@ -1,0 +1,84 @@
+---
+title: "Assignment 3"
+output: html_document
+---
+```{r}
+personal_number <- 180
+```
+## 2.
+### (b)
+Using seed 007:
+```{r}
+g2 = function (x) exp(-x)/(1+x^2)
+h2 = function (x) 1 - x
+set.seed(007)
+u = runif(10000)
+
+cor(g2(u), h2(u))
+A = -cov(g2(u),h2(u))/var(h2(u)) ;A
+u = runif(100000)
+
+mean(g2(u))
+mean(g2(u) + A*(h2(u) - 0.5))
+
+v1=var(g2(u)) ; v1
+v2 = var(g2(u) + A*(h2(u) - 0.5)); v2
+
+(v1-v2)/v1
+```
+Using my personal seed 180:
+```{r}
+g2 = function (x) exp(-x)/(1+x^2)
+h2 = function (x) 1 - x
+set.seed(personal_number)
+u = runif(10000)
+
+cor(g2(u), h2(u))
+A = -cov(g2(u),h2(u))/var(h2(u)) ;A
+u = runif(100000)
+
+mean(g2(u))
+mean(g2(u) + A*(h2(u) - 0.5))
+
+v1=var(g2(u)) ; v1
+v2 = var(g2(u) + A*(h2(u) - 0.5)); v2
+
+(v1-v2)/v1
+
+# Now for f3
+
+h3 = function (x) 1 - (0.9*x)
+set.seed(180)
+u = runif(10000)
+
+cor(g2(u), h3(u))
+A = -cov(g2(u),h3(u))/var(h3(u)) ;A
+u = runif(100000)
+
+mean(g2(u))
+mean(g2(u) + A*(h3(u) - 0.5))
+
+v1=var(g2(u)) ; v1
+v2 = var(g2(u) + A*(h3(u) - 0.5)); v2
+
+(v1-v2)/v1
+```
+From here, we can see that f_3 is performing about the same as our f_2.
+
+### (c)
+This might be because our f_2 and f_3 are extremely similar, and so scaling our x isn't enough to cause a difference in our results.
+
+## 3.
+```{r}
+set.seed(personal_number)
+n <- 10000
+sum(rnorm(n) > 4.5)
+sum(rnorm(n) > 4.5)
+sum(rnorm(n) > 4.5)
+sum(rnorm(n) > 4.5)
+n <- 100000
+sum(rnorm(n) > 4.5)
+n <- 1000000
+sum(rnorm(n) > 4.5)
+```
+Based on the result above, we can see that getting a value over 4.5 is incredibly low. When running the program multiple times and collecting multiple samples, we are not getting many cases. We only seem to get some cases of values over 4.5 when we set N=1 000 000.
