@@ -1,11 +1,75 @@
 ---
 title: "Assignment 3"
-output: html_document
+output:
+  pdf_document:
+    extra_dependencies: ["amssymb"]
+  
+  html_document: default
 ---
 ```{r}
 personal_number <- 180
 ```
+## 1.
+### (a)
+Since $U$ is a uniform on $[0, 1]$, then $F_U(x) = x$
+$$
+\begin{aligned}
+F_{U-1}(x) &= P[1 - U \le x] = 1 - P[1 - U \ge x] = 1 - P[U \le 1-x] = 1 - (1-x) \\
+F_{U-1}(x) &= x = F_U(x)
+\end{aligned}
+$$
+And so, they have the same distribution
+
+### (b)
+$$
+\begin{aligned}
+Var[e^U] &= \mathbb{E}[(e^U)^2] - \mathbb{E}[e^U]^2 \\
+&= \int_0^1e^{2U}dU - \left(\int_0^1e^UdU\right)^2 \\
+&= \frac{1}{2}(e^2-1) - (e-1)^2
+\end{aligned}
+$$
+Since they are the same distribution, both $U$ and $1-U$ have the same mean and variance.
+
+
+### (c)
+$$
+\begin{aligned}
+Cov[e^U, e^{1-U}] &= \mathbb{E}[e^Ue^{1-U}] - \mathbb{E}[e^U]\mathbb{E}[e^{1-U}] \\
+&= \mathbb{E}[e^{U+1-U}] - \left(\int_0^1e^UdU\right)\left(\int_0^1e^{1-U}dU\right)\\
+&= e - (e-1)(e^2)(-e^{-1} + 1)
+\end{aligned}
+$$
+
+### (d)
+$$
+\begin{aligned}
+Var[e^U+e^{U-1}] &= Var[e^U]+Var[e^{1-U}]+2Cov(e^U, e^{1-U}) \\
+&= 2(\frac{1}{2}(e^2-1) - (e-1)^2 + e - (e-1)(e^2)(-e^{-1}+1)) 
+\end{aligned}
+$$
+
+### (e)
+$$
+\begin{aligned}
+\frac{Var[e^U + e^{1-U}]}{Var[e^U] + Var[e^{1-U}]} &= \frac{2(\frac{1}{2}(e^2-1) - (e-1)^2 + e - (e-1)(e^2)(-e^{-1}+1)) }{2(\frac{1}{2}(e^2-1) - (e-1)^2)} \\
+&\approx -20.9\overline{28}
+\end{aligned}
+$$
+
 ## 2.
+
+### (a)
+
+$$
+\begin{aligned}
+Cor(aX + b, cY + d) &= \frac{Cov(aX+b, cY+d)}{\sqrt{Var(aX+b)Var(cY+d)}} \\
+&= \frac{Cov(aX, cY)}{\sqrt{Var(aX)Var(cY)}}\\
+&= \frac{acCov(X,Y)}{\sqrt{a^2c^2Var(X)Var(Y)}} =  \frac{acCov(X,Y)}{\sqrt{(ac)^2}\sqrt{Var(X)Var(Y)}} \\
+&= \frac{acCov(X,Y)}{ac\sqrt{Var(X)Var(Y)}} = \frac{Cov(X,Y)}{\sqrt{Var(X)Var(Y)}}\\
+&= Cor(X,Y)
+\end{aligned}
+$$
+
 ### (b)
 Using seed 007:
 ```{r}
@@ -63,10 +127,10 @@ v2 = var(g2(u) + A*(h3(u) - 0.5)); v2
 
 (v1-v2)/v1
 ```
-From here, we can see that f_3 is performing about the same as our f_2.
+From here, we can see that $f_3$ is performing about the same as our f_2.
 
 ### (c)
-This might be because our f_2 and f_3 are extremely similar, and so scaling our x isn't enough to cause a difference in our results.
+This might be because our $f_2$ and $f_3$ are extremely similar, and so scaling our x isn't enough to cause a difference in our results.
 
 ## 3.
 ```{r}
@@ -82,3 +146,79 @@ n <- 1000000
 sum(rnorm(n) > 4.5)
 ```
 Based on the result above, we can see that getting a value over 4.5 is incredibly low. When running the program multiple times and collecting multiple samples, we are not getting many cases. We only seem to get some cases of values over 4.5 when we set N=1 000 000.
+
+## 4.
+### (a)
+```{r}
+# Define the grid
+x = seq(-2, 2, len = 50)
+y = x
+xy = expand.grid(x, y)
+
+e = -6*exp(-(3*xy[,1]^2 + 0.5*xy[,2]^2 + 6*xy[,1] - xy[,2] + 3.5))
+p = xy[,1]^2 + xy[,2]^2 -2*xy[,1] + 1
+z = matrix(e + p, nrow=length(x), ncol=length(y))
+
+contour(x, y, z, nlevels = 50)
+```
+
+### (b)
+$$
+\begin{aligned}
+  D_x f(x,y) &= \frac{\partial}{\partial x}-6e^{-(3x^2 + 0.5y^2 +6x -y +3.5)} + x^2 +y^2 - 2x + 1 \\
+  &= (6e^{-(3x^2 + 0.5y^2 +6x -y +3.5)})(6x + 6) + 2x -2 \\
+  D_y f(x,y) &= \frac{\partial}{\partial y}-6e^{-(3x^2 + 0.5y^2 +6x -y +3.5)} + x^2 +y^2 - 2x + 1 \\
+  &= (6e^{-(3x^2 + 0.5y^2 +6x -y +3.5)})(y - 1) + 2y \\
+  \therefore \nabla f(x,y) &= 
+  \begin{pmatrix}
+    (6e^{-(3x^2 + 0.5y^2 +6x -y +3.5)})(6x + 6) + 2x -2  \\
+    (6e^{-(3x^2 + 0.5y^2 +6x -y +3.5)})(y - 1) + 2y
+  \end{pmatrix}
+\end{aligned}
+$$
+
+```{r}
+d_x = function(x, y) {
+  exp_term <- exp(-(3*x^2 + 0.5*y^2 + 6*x - y + 3.5))
+  return((6 * exp_term) * (6*x + 6) + 2*x - 2)
+}
+
+d_y = function(x, y) {
+  exp_term <- exp(-(3*x^2 + 0.5*y^2 + 6*x - y + 3.5))
+  return((6 * exp_term) * (y - 1) + 2*y)
+}
+
+contour(x, y, z, nlevels = 50)
+arrows(0,0,d_x(0,0),d_y(0,0))
+arrows(1,1,d_x(1,1),d_y(1,1))
+arrows(-1,0,d_x(-1,0),d_y(-1,0))
+arrows(1,0,d_x(1,0),d_y(1,0))
+arrows(0,1,d_x(0,1),d_y(0,1))
+arrows(1,-1,d_x(1,-1),d_y(1,-1))
+arrows(-1,1,d_x(-1,1),d_y(-1,1))
+```
+
+### (c)
+```{r}
+f = function(x,y) {
+  exp_t = 6*exp(-(3*x^2 + 0.5*y^2 + 6*x -y +3.5))
+  return(-exp_t + x^2 + y^2 -2*x + 1)
+}
+gradient = function(x,y) {
+  return(c(d_x(x, y), d_y(x, y)))
+}
+
+steps <- list(c(0,0))
+
+for (i in 1:50) {
+  steps[[i + 1]] = steps[[i]] - 0.01 * gradient(steps[[i]][1], steps[[i]][2])
+}
+
+contour(x, y, z, nlevels = 50)
+for (i in 1:(length(steps) - 1)) {
+  arrows(steps[[i]][1], steps[[i]][2], steps[[i + 1]][1], steps[[i + 1]][2], col = "red", length = 0.1)
+}
+```
+
+### (d)
+So it seems as though that the gradient descent algorithm goes towards the peak of our contour lines, however it only goes towards any stationary point of a function. In our case, we see that the gradient descent algorithm actually is converging to a local minimum, but not the global minimum (which we can observed based on contour values).
